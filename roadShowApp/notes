@@ -1,0 +1,22 @@
+Flask app
+
+initial tutorial (part one): https://scotch.io/tutorials/build-a-crud-web-app-with-python-and-flask-part-one
+
+Initialize variables at first
+    export FLASK_CONFIG=development
+    export FLASK_APP=run.py
+    export FLASK_DEBUG=1
+
+background tasks
+    Celery http://docs.celeryproject.org/en/latest/getting-started/first-steps-with-celery.html
+        Message Broker (translate from one channel to another)
+
+Deployment on PythonAnywhere.com
+
+    username: roadshowApp
+    pwd: 2Covalent!6
+
+    database pwd: 2Covalent!6
+    database name: roadshow-app
+
+    secret_key p9Bv<3Eie9%$i21

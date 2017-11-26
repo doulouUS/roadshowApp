@@ -1,0 +1,210 @@
+{% import "bootstrap/utils.html" as utils %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% extends "base.html" %}
+{% block title %}Slots{% endblock %}
+{% block body %}
+<div class="content-section">
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <br/>
+        {{ utils.flashed_messages() }}
+          <!--
+          arguments available:  roadshow, list_morning_slot, list_afternoon_slot, nb_day, paired_list_morning,
+                        paired_list_afternoon, client_selection_field
+                                    (roadshow_id)
+          -->
+        <br/>
+        <h1 style="text-align:center;">Slots for Roadshow "{{ roadshow.roadshow_name }}" </h1>
+          <hr class="intro-divider">
+          <div class="center">
+              <p> Each meeting will last {{ roadshow.meeting_duration }} minutes. Adjust the following elements: </p>
+
+              <form action="{{ url_for('admin.add_smart_slot', roadshow_id=roadshow.roadshow_id ) }}"
+                    method="POST">
+
+              {% for day in range(1, nb_day+1) %}
+                  <hr>
+                  <hr>
+              <h2> DAY {{ day  }}</h2>
+                  <p> Select the appropriate day:</p>
+                  <input name="{{'day'}}{{day}}" type="date" required>
+                <h3>Morning</h3>
+                  <table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th width="30%"> Slot Name </th>
+                    <th width="30%"> Hosting Client </th>
+                  <th width="10%"> Maximum Nb of Participants </th>
+                  <th width="15%"> Start Time </th>
+                    <th width="15%"> End Time </th>
+                  <th width="10%"> Set aside </th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for time in list_morning_times %}
+                    <tr>
+                      <td>
+                          <input type="text"
+                                 name="{{'slot_name_'}}{{day}}{{'_'}}{{paired_list_morning[time]}}"
+                                 value="{{'Day '}}{{ day }}{{', slot at '}}{{ time.time().strftime('%H:%M:%S')}}"
+                                 required>
+                      </td>
+
+                        <td>
+                            <select name="{{'host_name_'}}{{day}}{{'_'}}{{paired_list_morning[time]}}"
+                                    method="GET" action="/"
+                                    selected="{{client_list[0]}}"
+                                    >
+                                {% for client in client_list %}
+                                <option value="{{client.client_id}}" SELECTED>{{client.client_name}}</option>"
+                                {% endfor %}
+                            </select>
+                        </td>
+                      <td>
+                        <input type="number" min="1" max="100" step="1"
+                               name="{{'max_nb_clients_'}}{{day}}{{'_'}}{{paired_list_morning[time]}}"
+                               value="1" required>
+                      </td>
+
+                        <td>
+                        <input type="time"
+                               name="{{'start_time_'}}{{day}}{{'_'}}{{paired_list_morning[time]}}"
+                               value="{{ time.time().strftime('%H:%M:%S') }}" required>
+                      </td>
+                        <td>
+                        <input type="time"
+                               name="{{'end_time_'}}{{day}}{{'_'}}{{paired_list_morning[time]}}"
+                               value={{ add_time(time, roadshow.meeting_duration) }} required>
+                      </td>
+                      <td>
+                        <input type="checkbox"
+                               name="{{'set_aside_'}}{{day}}{{'_'}}{{paired_list_morning[time]}}">
+                      </td>
+
+                    </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+                  <h3> Lunch </h3>
+                  <table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th width="20%"> Slot Name </th>
+                    <th width="15%"> Hosting Client </th>
+                  <th width="15%"> Maximum Nb of Participants </th>
+                  <th width="15%"> Start Time </th>
+                    <th width="15%"> End Time </th>
+                  <th width="10%"> Set aside </th>
+                </tr>
+              </thead>
+              <tbody>
+                    <tr>
+                      <td>
+                          <input type="text"
+                                 name="{{'slot_name_lunch_'}}{{day}}"
+                                 value="{{'Day '}}{{ day }}{{', lunch'}}" required>
+                      </td>
+                        <td>
+                            <select name="{{'host_name_lunch_'}}{{day}}"
+                                    method="GET" action="/"
+                                    selected="{{client_list[0]}}">
+                                {% for client in client_list %}
+                                <option value="{{client.client_id}}" SELECTED>{{client.client_name}}</option>"
+                                {% endfor %}
+                            </select>
+                        </td>
+                      <td>
+                        <input type="number" min="1" max="100" step="1"
+                               name="{{'max_nb_clients_lunch_'}}{{day}}"
+                               value="1" required>
+                      </td>
+
+                        <td>
+                        <input type="time"
+                               name="{{'start_time_lunch_'}}{{day}}"
+                               value="{{ roadshow.lunch_start_time.time().strftime('%H:%M:%S')}}" required>
+                      </td>
+                        <td>
+                        <input type="time"
+                               name="{{'end_time_lunch_'}}{{day}}"
+                               value="{{ roadshow.lunch_end_time.time().strftime('%H:%M:%S') }}" required>
+                      </td>
+                      <td>
+                        <input type="checkbox"
+                               name="{{'set_aside_lunch_'}}{{day}}"
+                        >
+                      </td>
+                    </tr>
+              </tbody>
+            </table>
+
+              <h3>Afternoon</h3>
+            <table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th width="30%"> Slot Name </th>
+                    <th width="15%"> Hosting Client </th>
+                  <th width="15%"> Maximum Nb of Participants </th>
+                  <th width="15%"> Start Time </th>
+                    <th width="15%"> End Time </th>
+                  <th width="10%"> Set aside </th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for time in list_afternoon_times %}
+                    <tr>
+                      <td>
+                          <input type="text"
+                                 name="{{'slot_name_'}}{{day}}{{'_'}}{{paired_list_afternoon[time]}}"
+                                 value="{{'Day '}}{{ day }}{{', slot at '}}{{ time.time().strftime('%H:%M:%S')}}"
+                                 required>
+                      </td>
+                        <td>
+                            <select name="{{'host_name_'}}{{day}}{{'_'}}{{paired_list_afternoon[time]}}"
+                                    method="GET" action="/"
+                                    selected="{{client_list[0]}}">
+                                {% for client in client_list %}
+                                <option value="{{client.client_id}}" SELECTED>{{client.client_name}}</option>"
+                                {% endfor %}
+                            </select>
+                        </td>
+                      <td>
+                        <input type="number" min="1" max="100" step="1"
+                               name="{{'max_nb_clients_'}}{{day}}{{'_'}}{{paired_list_afternoon[time]}}"
+                               value="1" required>
+                      </td>
+
+                        <td>
+                        <input type="time"
+                               name="{{'start_time_'}}{{day}}{{'_'}}{{paired_list_afternoon[time]}}"
+                               value="{{ time.time().strftime('%H:%M:%S') }}" required>
+                      </td>
+                        <td>
+                        <input type="time"
+                               name="{{'end_time_'}}{{day}}{{'_'}}{{paired_list_afternoon[time]}}"
+                               value={{ add_time(time, roadshow.meeting_duration) }} required>
+                      </td>
+                      <td>
+                        <input type="checkbox"
+                               name="{{'set_aside_'}}{{day}}{{'_'}}{{paired_list_afternoon[time]}}"
+                        >
+                      </td>
+
+                    </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+              {% endfor %}
+                  <input type="submit" name="my-form" value="Submit">
+              </form>
+
+          </div>
+          <div style="text-align: center">
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

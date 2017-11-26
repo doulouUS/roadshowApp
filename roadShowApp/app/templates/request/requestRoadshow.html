@@ -1,0 +1,35 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/utils.html" as utils %}
+
+{% extends "base.html" %}
+{% block title %}Request Roadshow{% endblock %}
+{% block body %}
+<!--
+
+<div class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-message">
+                    <h1>Roadshow Planner</h1>
+                    <h3>To Book your Slot, start by choosing a Roadshow below</h3>
+                    <hr class="intro-divider">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+<div class="center">
+    <div class="content-section">
+        <h1>Available Roadshows</h1>
+        {{ utils.flashed_messages() }}
+
+        <h3> Starting from here, please do not press previous button. Instead finish the transaction and
+        edit it later in the roadshow section.</h3>
+        <br/>
+        {{ wtf.quick_form(form) }}
+    </div>
+</div>
+{% endblock %}

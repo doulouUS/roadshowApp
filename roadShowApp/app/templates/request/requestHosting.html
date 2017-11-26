@@ -1,0 +1,51 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+{% block title %}Hosting{% endblock %}
+{% block body %}
+<!--
+
+<div class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-message">
+                    <h1>One last step...</h1>
+                    <h3>The hosting client.</h3>
+                    <hr class="intro-divider">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+<div class="center">
+    <div class="content-section">
+        <h1>You selected the following slot:</h1>
+        <h3> {{ slot_name }} </h3>
+            {% if hosting_client == 0 %}
+                <p> Nobody is hosting for now. </p>
+                <br/>
+                {{ form.hidden_tag() }}
+                <h3>{{ form.confirm.label }}</h3>
+                    {{ wtf.quick_form(form) }}
+            {% else %}
+                <p> {{ hosting_client_name }} is hosting this slot. </p>
+                <br/>
+                <h3>{{ form.confirm.label }}</h3>
+                    {{ wtf.quick_form(form) }}
+
+            {% endif %}
+
+            <!--
+            {% for subfield in form.radio %}
+                <tr>
+                    <td>{{ subfield }}</td>
+                    <td>{{ subfield.label }}</td>
+                </tr>
+            {% endfor %}
+            -->
+
+    </div>
+</div>
+{% endblock %}
