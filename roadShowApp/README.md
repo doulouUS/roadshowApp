@@ -1,5 +1,5 @@
 
-## ROADSHOW PLANNER ##
+## ROADSHOW PLANNER
 
 Run the app:
 - clone the repo
